@@ -1,0 +1,30 @@
+name: "[dispatch] release all core services"
+on:
+  workflow_dispatch:
+jobs:
+  core_arm_build_service:
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        target: ['core-core1', 'core-core2', 'core-core3', 'core-core4', 'tools-tool1', 'tools-tool2', 'docs-doc1', 'docs-doc2', 'docs-doc3']
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - name: task
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          token: ${{ secrets.PAT_TOKEN }}
+          repo: mzTesting/${{ matrix.target }}
+          workflow: test_api_trigger.yaml
+
+  notify_to_slack:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Slack
+        if: always()
+        uses: 8398a7/action-slack@v3.15.0
+        with:
+          status: ${{job.status}}
+          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
+          author_name: Github Action Slack
