@@ -16,7 +16,7 @@ jobs:
         with:
           token: ${{ secrets.PAT_TOKEN }}
           repo: mzTesting/${{ matrix.target }}
-          workflow: test_api_trigger.yaml
+          workflow: test_api_trigger.yml
 
   notify_to_slack:
     runs-on: ubuntu-latest
